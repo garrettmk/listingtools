@@ -3,6 +3,13 @@ import itertools
 
 
 class QuantityGuesser:
+    """QuantityGuesser attempts to determine the number of items sold in a listing, based on a
+    string containing quantity information. For example 'set of 5' should return the integer 5.
+    It can also take more complicated forms, like '4 sets of 1 dozen'. Often, listing will use
+    abbreviated forms (such as 'dz' for dozen, or 'cs' for 'case'). QuantityGuesser can also take
+    a longer string (such as a title with quantity info at the end) or a short paragraph (like
+    a product details section).
+    """
 
     # Match 'container' words, abbreviations and plurals. Ex: matches 'pk', 'pks', 'pack', or 'packs'
     _re_containers = r'(?:(?<![a-z])(?:package|pack|pk|case|cs|set|st|boxe|box|bx|count|ct|carton|bag|bg|roll|rl|sleeve|quantity)s?(?![a-z]))'
@@ -12,7 +19,7 @@ class QuantityGuesser:
 
     # Match numbers given in plain form, comma-separated, and/or enclosed in parentheses. Ex: (1,000)
     # Now recognizes fractions: 1/2, 1,000/2, (1/2), etc
-    _re_numbers = r'\(?(?P<num>\d[\d,]*(?:/\d[\d,]*)?)\)?'
+    _re_numbers = r'(\(?(?P<num>\d[\d,]*(?:/\d[\d,]*)?)\)?)'
 
     _mult_lookup = {'ea': 1, 'each': 1,
                     'unit': 1,
@@ -56,15 +63,18 @@ class QuantityGuesser:
         return product
 
     def _type1_matches(self, string):
-        """Matches the form: (container) of/consists of (number)(multiplier)
-        Ex: "set of 6" "box of 2 doz" "set consists of 6 pieces"
+        """Matches the form: (number)(container) of/consists of (number)(multiplier)
+        Ex: "set of 6" "box of 2 doz" "set consists of 6 pieces" "30 sets of 10"
         """
-        r = re.compile(r'{container}(?:\s+consists?)?(?:\s+of)\s*{number}\s*{multiplier}?' \
-                       .format(container=self._re_containers, number=self._re_numbers, multiplier=self._re_multipliers),
+        r = re.compile(r'{number1}?\s*{container}(?:\s+consists?)?(?:\s+of)\s*{number2}\s*{multiplier}?'\
+                       .format(number1=self._re_numbers.replace('num', 'num1'),
+                               container=self._re_containers,
+                               number2=self._re_numbers.replace('num', 'num2'),
+                               multiplier=self._re_multipliers),
                        re.IGNORECASE)
 
         for match in r.finditer(string):
-            yield self._mult(match.group('num'), match.group('mult'))
+            yield self._mult(match.group('num1'), match.group('num2'), match.group('mult'))
 
     def _type2_matches(self, string):
         """Matches the form: (quantity) (per) (container)
@@ -87,4 +97,3 @@ class QuantityGuesser:
 
         for match in r.finditer(string):
             yield self._mult(match.group('num'), match.group('mult'))
-

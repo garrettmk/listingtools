@@ -31,7 +31,14 @@ class TestQuantityGuesser(TestCase):
                  ('boxes consist of 1 dozen', 12),
                  ('bags consist of (1) dz', 12),
                  ('case consists of 1,000 pieces', 1000),
-                 ('set consists of (1,000/2) pcs', 500))
+                 ('set consists of (1,000/2) pcs', 500),
+
+                 ('30 sets of 100', 3000),
+                 ('10 packs of 1 dz', 120),
+                 ('(10) boxes of 1/2 dozen', 60),
+                 ('1 set of (10) pieces', 10),
+                 ('2 sets of 1/2dz', 12),
+                 ('(12) boxes of 1,000 units', 12000))
 
     type2_set = (('12pk', 12),
                  ('12 pack', 12),
