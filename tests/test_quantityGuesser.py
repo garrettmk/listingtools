@@ -38,7 +38,17 @@ class TestQuantityGuesser(TestCase):
                  ('(10) boxes of 1/2 dozen', 60),
                  ('1 set of (10) pieces', 10),
                  ('2 sets of 1/2dz', 12),
-                 ('(12) boxes of 1,000 units', 12000))
+                 ('(12) boxes of 1,000 units', 12000),
+
+                 ('pk100', 100),
+                 ('pk (100)', 100),
+                 ('case 1/2 doz', 6),
+                 ('package quantity 100', 100),
+                 ('package quantities 2dz', 24),
+                 ('Box qty 12', 12),
+                 ('package qty: 2dz', 24),
+                 ('quantity (2) dozen', 24))
+
 
     type2_set = (('12pk', 12),
                  ('12 pack', 12),
@@ -140,7 +150,7 @@ class TestQuantityGuesser(TestCase):
         for params in self.nonsense_set:
             with self.subTest(string=params[0]):
                 with self.assertRaises(StopIteration):
-                    next(self.guesser._type2_matches(params[0]))
+                    next(self.guesser._type3_matches(params[0]))
 
     def test_guess(self):
         """Test the guess() method."""
