@@ -47,7 +47,8 @@ class TestQuantityGuesser(TestCase):
                  ('package quantities 2dz', 24),
                  ('Box qty 12', 12),
                  ('package qty: 2dz', 24),
-                 ('quantity (2) dozen', 24))
+                 ('quantity (2) dozen', 24),
+                 ('Case of: 1 dz', 12))
 
 
     type2_set = (('12pk', 12),

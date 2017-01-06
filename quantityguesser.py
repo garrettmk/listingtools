@@ -12,7 +12,7 @@ class QuantityGuesser:
     """
 
     # Match 'container' words, abbreviations and plurals. Ex: matches 'pk', 'pks', 'pack', or 'packs'
-    _re_containers = r'(?:(?<![a-z])(?:quantity|quantitie|qty|package|pack|pk|case|cs|set|st|boxe|box|bx|count|ct|carton|bag|bg|roll|rl|sleeve)s?(?![a-z]))'
+    _re_containers = r'(?:(?<![a-z])(?:quantity|quantitie|qty|package|pack|pk|case|cs|set|boxe|box|bx|count|ct|carton|ctn|bag|bg|roll|rl|sleeve)s?(?![a-z]))'
 
     # Match 'multiplier' words, abbreviations, and plurals. Ex: matches 'dz', 'dzs', 'dozen', or 'dozens'
     _re_multipliers = r'(?:(?<![a-z])(?P<mult>ea|each|unit|pc|piece|peice|pr|pair|dz|dzn|doz|dozen)s?(?![a-z]))'
